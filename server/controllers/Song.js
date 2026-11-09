@@ -1,0 +1,47 @@
+const appPage = (req, res) => {
+  res.render('app');
+};
+
+const getSongs = async (req, res) => {
+  try {
+    const docs = [
+      { artist: 'Rick Astley', title: 'Never Gonna Give You Up' },
+      { artist: 'Washed Out', title: 'Feel It All Around' },
+      { artist: 'Men I Trust', title: 'Show Me How' },
+    ];
+
+    return res.json(docs);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error retrieving songs!' });
+  }
+};
+
+const addSong = async (req, res) => {
+  if (!req.body.artist || !req.body.title) {
+    return res.status(400).json({ error: 'Artist and title are required!' });
+  }
+
+  try {
+    return res.status(501).json({ error: 'Not built yet' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error saving song!' });
+  }
+};
+
+const deleteSong = async (req, res) => {
+  try {
+    return res.status(501).json({ error: 'Not built yet' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error deleting song!' });
+  }
+};
+
+module.exports = {
+  appPage,
+  getSongs,
+  addSong,
+  deleteSong,
+};
