@@ -1,14 +1,19 @@
+const models = require('../models');
+const { Song } = models;
+
 const appPage = (req, res) => {
   res.render('app');
 };
 
 const getSongs = async (req, res) => {
   try {
-    const docs = [
-      { artist: 'Rick Astley', title: 'Never Gonna Give You Up' },
-      { artist: 'Washed Out', title: 'Feel It All Around' },
-      { artist: 'Men I Trust', title: 'Show Me How' },
-    ];
+    // const docs = [
+    //   { artist: 'Rick Astley', title: 'Never Gonna Give You Up' },
+    //   { artist: 'Washed Out', title: 'Feel It All Around' },
+    //   { artist: 'Men I Trust', title: 'Show Me How' },
+    // ];
+
+    const docs = await Song.find({}).lean().exec();
 
     return res.json(docs);
   } catch (err) {
@@ -23,7 +28,18 @@ const addSong = async (req, res) => {
   }
 
   try {
-    return res.status(501).json({ error: 'Not built yet' });
+    // return res.status(501).json({ error: 'Not built yet' });
+    const newSong = new Song({
+      artist: req.body.artist,
+      title: req.body.title,
+    });
+
+    await newSong.save();
+
+    return res.status(201).json({
+      artist: newSong.artist,
+      title: newSong.title,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'Error saving song!' });
@@ -32,7 +48,12 @@ const addSong = async (req, res) => {
 
 const deleteSong = async (req, res) => {
   try {
-    return res.status(501).json({ error: 'Not built yet' });
+    // return res.status(501).json({ error: 'Not built yet' });
+    await Song.deleteOne({ _id: req.body.id }).lean().exec();
+
+    return res.status(200).json({ 
+      message: 'Song deleted' 
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'Error deleting song!' });
